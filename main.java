@@ -4,5 +4,7 @@ public class main {
         System.out.println("Rank-Choice Vote Ballot Counter");
         System.out.println("By Riley and Tilda :)");
         System.out.println("===============================");
+
+        Tally t = new Tally("RCVRaw.csv");
     }
 }
