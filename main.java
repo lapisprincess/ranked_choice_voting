@@ -1,10 +1,20 @@
-public class main {
+import java.io.FileNotFoundException;
+
+public class Main {
     public static void main(String[] args) {
         System.out.println("==============================="); 
         System.out.println("Rank-Choice Vote Ballot Counter");
         System.out.println("By Riley and Tilda :)");
         System.out.println("===============================");
 
-        Tally t = new Tally("RCVRaw.csv");
+        String file_name = "RCVRaw.csv";
+        try {
+            Tally t = new Tally(file_name);
+            System.out.println("File loaded successfully!");
+        } catch (FileNotFoundException E) {
+            System.out.println("File not found! " + E.toString());
+        } catch (Exception E) {
+            System.out.println("Something went wrong! " + E.toString());
+        }
     }
 }
