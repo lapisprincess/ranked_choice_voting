@@ -8,15 +8,12 @@ import java.io.FileNotFoundException;
 
 public class Tally {
     private ArrayList<String> candidates;
-    private Stack<String> ballots;
+    private Stack<Ballot> ballots;
 
     private File file;
     private Scanner sc;
 
     public Tally(String file_name) throws FileNotFoundException {
-        candidates = new ArrayList<>();
-        ballots = new Stack<>();
-
         file = new File(file_name);
         sc = new Scanner(file);
         this.disectFile(sc);
@@ -26,6 +23,7 @@ public class Tally {
 
     public void disectFile(Scanner sc) {
         // register candidates
+        this.candidates = new ArrayList<>();
         {
             String line = sc.nextLine();
             while (line.contains(",")) {
@@ -39,12 +37,26 @@ public class Tally {
         }
 
         // register ballots
+        this.ballots = new Stack<>();
         while (sc.hasNext()) {
             String line = sc.nextLine();
-            int num_candidates = candidates.size();
-            Ballot curr_ballot = Ballot(num_candidates);
-            
+            Ballot curr_ballot = new Ballot(candidates.size());
+            int i = 0;
+            while (line.contains(",")) {
+                int i_comma = line.indexOf(',');
+                String curr_vote = line.substring(0, i_comma);
+                int score = -1;
+                if (!curr_vote.equals("No Rank")) {
+                    score = ((int) curr_vote.charAt(8)) - 48;
+                }
+                if (score > 0 && score <= candidates.size()) {
+                    curr_ballot.assignValue(score, i);
+                }
+                line = line.substring(i_comma + 1, line.length());
+                i++;
+            }
 
+            System.out.println(curr_ballot.toString());
             if (curr_ballot.checkValidity()) {
                 ballots.add(curr_ballot);
             }
