@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 
 public class Tally {
     private ArrayList<String> candidates;
-    private Stack<Ballot> ballots;
+    private Queue<Ballot> ballots;
 
     private File file;
     private Scanner sc;
@@ -17,8 +17,6 @@ public class Tally {
         file = new File(file_name);
         sc = new Scanner(file);
         this.disectFile(sc);
-
-        System.out.println(candidates.toString());
     }
 
     public void disectFile(Scanner sc) {
@@ -63,10 +61,7 @@ public class Tally {
                 curr_ballot.assignValue(score, i);
             }
 
-            System.out.println(curr_ballot.toString());
-            if (curr_ballot.checkValidity()) {
-                ballots.add(curr_ballot);
-            }
+            ballots.add(curr_ballot);
         }
     }
 }
