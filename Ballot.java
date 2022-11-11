@@ -21,7 +21,7 @@ public class Ballot{
                 return false;
             }
 
-            if (curr_index != last_index) {
+            if (curr_index >= 0 && curr_index != last_index) {
                 return false;
             }
         }
@@ -29,7 +29,7 @@ public class Ballot{
     }
     
     public void assignValue(int value, int index){
-        this.votes.add(index, value);
+        this.votes.set(index, value);
     }
     
     public void removeCandidate(int index) {
@@ -38,7 +38,7 @@ public class Ballot{
                 votes.set(i, (votes.get(i) - 1));
             }
         }
-        this.votes.add(index, -1);
+        this.votes.set(index, -1);
     }
     
     public String toString(){

@@ -47,13 +47,20 @@ public class Tally {
                 String curr_vote = line.substring(0, i_comma);
                 int score = -1;
                 if (!curr_vote.equals("No Rank")) {
-                    score = ((int) curr_vote.charAt(8)) - 48;
+                    int curr_vote_length = curr_vote.length();
+                    score = ((int) curr_vote.charAt(curr_vote_length-1)) - 48;
                 }
                 if (score > 0 && score <= candidates.size()) {
                     curr_ballot.assignValue(score, i);
                 }
                 line = line.substring(i_comma + 1, line.length());
                 i++;
+            }
+            String curr_vote = line.substring(0, line.length());
+            if (curr_vote.length() > 0 && !curr_vote.equals("No Rank")) { 
+                int curr_vote_length = curr_vote.length();
+                int score = ((int) curr_vote.charAt(curr_vote_length-1)) - 48;
+                curr_ballot.assignValue(score, i);
             }
 
             System.out.println(curr_ballot.toString());
