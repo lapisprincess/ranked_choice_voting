@@ -92,11 +92,9 @@ public class Tally {
     public int validBallots() {
         int out = 0;
         for (int i = 0; i < ballots.size(); i++) {
-            Ballot curr_ballot = ballots.poll();
-            if (curr_ballot.checkValidity()) {
+            if (ballots.peek().checkValidity()) {
                 out++;
             }
-            ballots.offer(curr_ballot);
         }
         return out;
     }
