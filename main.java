@@ -11,6 +11,8 @@ public class Main {
         try {
             Tally t = new Tally(file_name);
             System.out.println("File loaded successfully!");
+            System.out.println(t.toString());
+            System.out.println(t.validBallots());
         } catch (FileNotFoundException E) {
             System.out.println("File not found! " + E.toString());
         } catch (Exception E) {

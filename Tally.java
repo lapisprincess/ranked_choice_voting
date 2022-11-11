@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Stack;
+import java.util.Queue;
 
 import java.util.Scanner;
 import java.io.File;
@@ -19,7 +19,20 @@ public class Tally {
         this.disectFile(sc);
     }
 
-    public void disectFile(Scanner sc) {
+    public boolean removeCandidate(String candidate) {
+        int index = this.candidates.indexOf(candidate);
+        if (index < 0) {
+            return false;
+        }
+        for (int i = 0; i < ballots.size(); i++) {
+            Ballot curr_ballot = ballots.poll();
+            curr_ballot.removeCandidate(index);
+            ballots.offer(curr_ballot);
+        }
+        return true;
+    }
+
+    private void disectFile(Scanner sc) {
         // register candidates
         this.candidates = new ArrayList<>();
         {
@@ -35,7 +48,7 @@ public class Tally {
         }
 
         // register ballots
-        this.ballots = new Stack<>();
+        this.ballots = new LinkedList<>();
         while (sc.hasNext()) {
             String line = sc.nextLine();
             Ballot curr_ballot = new Ballot(candidates.size());
@@ -63,5 +76,28 @@ public class Tally {
 
             ballots.add(curr_ballot);
         }
+    }
+
+    public String toString() {
+        String out = "[\n";
+        for (int i = 0; i < ballots.size(); i++) {
+            Ballot curr_ballot = ballots.poll();
+            out += curr_ballot.toString() + "\n";
+            ballots.offer(curr_ballot);
+        }
+        out += "]";
+        return out;
+    }
+    
+    public int validBallots() {
+        int out = 0;
+        for (int i = 0; i < ballots.size(); i++) {
+            Ballot curr_ballot = ballots.poll();
+            if (curr_ballot.checkValidity()) {
+                out++;
+            }
+            ballots.offer(curr_ballot);
+        }
+        return out;
     }
 }

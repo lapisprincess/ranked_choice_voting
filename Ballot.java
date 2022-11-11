@@ -11,21 +11,26 @@ public class Ballot{
     }
     
     public boolean checkValidity() {
-        boolean sequence = true;
-        for (int i = 1; i <= votes.size(); i++) {
-            int curr_index = votes.indexOf(i);
-            int last_index = votes.lastIndexOf(i);
-            if (curr_index < 0 && sequence == true) {
-                sequence = false;
-            } else if (curr_index < 0 && sequence == false) {
-                return false;
+        ArrayList<Integer> disect = new ArrayList<>(votes.size());
+        for (int i = 0; i < votes.size(); i++){
+            disect.add(votes.get(i));
+            //System.out.println(votes.get(i));
+        }
+        ArrayList<Integer> removable = new ArrayList<>();
+        removable.add(-1);
+        if (disect.indexOf(1) == disect.lastIndexOf(1) && disect.indexOf(1) != -1){
+            disect.set(disect.indexOf(1), -1);
+            int j = 2;
+            while (disect.indexOf(j) != -1 && j <= disect.size()){
+                disect.set(disect.indexOf(j), -1);
+                j++;
             }
-
-            if (curr_index >= 0 && curr_index != last_index) {
-                return false;
+            disect.removeAll(removable);
+            if (disect.isEmpty()){
+                return true;
             }
         }
-        return true;
+        return false;
     }
     
     public void assignValue(int value, int index){
