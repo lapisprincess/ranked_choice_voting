@@ -19,17 +19,11 @@ public class Tally {
         this.disectFile(sc);
     }
 
-    public boolean removeCandidate(String candidate) {
-        int index = this.candidates.indexOf(candidate);
-        if (index < 0) {
-            return false;
-        }
+    private void removeCandidate(int candidate) {
         for (int i = 0; i < ballots.size(); i++) {
-            Ballot curr_ballot = ballots.poll();
-            curr_ballot.removeCandidate(index);
-            ballots.offer(curr_ballot);
+            ballots.peek().removeCandidate(candidate);
+            ballots.offer(ballots.poll());
         }
-        return true;
     }
 
     private void disectFile(Scanner sc) {
@@ -89,13 +83,69 @@ public class Tally {
         return out;
     }
     
-    public int validBallots() {
+    public int totalValidBallots() {
         int out = 0;
         for (int i = 0; i < ballots.size(); i++) {
             if (ballots.peek().checkValidity()) {
                 out++;
             }
+            ballots.offer(ballots.poll());
         }
         return out;
+    }
+
+    public int totalBallots() {
+        return ballots.size();
+    }
+
+    public int getCandidateVote(int candidate) {
+        int total = 0;
+        for (int i = 0; i < ballots.size(); i++) {
+            Ballot curr_ballot = ballots.poll();
+            if (curr_ballot.checkValidity() && curr_ballot.getFirstVote() == candidate) {
+                total++;
+            }
+            ballots.offer(curr_ballot);
+        }
+        return total;
+    }
+
+    public int getCandidatePercentage(int candidate) {
+        double fraction = (double)
+            this.getCandidateVote(candidate) / this.totalValidBallots();
+        return (int) (fraction * 100);
+    }
+
+    public void doTheThing() {
+        System.out.println();
+        System.out.println("--------NEXT ROUND---------");
+        System.out.println("Valid ballots: " + totalValidBallots());
+        int winner = -1;
+        int loser = 0;
+        while (getCandidateVote(loser) == 0) {
+            loser++;
+        }
+        for (int i = 0; i < candidates.size(); i++) {
+            if (getCandidateVote(i) > 0) {
+                if (getCandidatePercentage(i) > 50) {
+                    winner = i;
+                }
+                if (getCandidateVote(i) < getCandidateVote(loser)) {
+                    loser = i;
+                }
+                System.out.print(candidates.get(i) + ": ");
+                System.out.print(getCandidateVote(i) + " votes ");
+                System.out.println("(" + getCandidatePercentage(i) + "%)");
+            }
+        }
+        if (winner < 0) {
+            System.out.println(candidates.get(loser) + " eliminated");
+            removeCandidate(loser);
+            doTheThing();
+        } else {
+            System.out.println("---------RESULTS-----------");
+            System.out.println("WINNER BY MAJORITY: " + candidates.get(winner));
+            System.out.println("---------------------------");
+        }
     }
 }

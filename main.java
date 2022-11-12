@@ -10,9 +10,7 @@ public class Main {
         String file_name = "RCVRaw.csv";
         try {
             Tally t = new Tally(file_name);
-            System.out.println("File loaded successfully!");
-            System.out.println(t.toString());
-            System.out.println(t.validBallots());
+            t.doTheThing();
         } catch (FileNotFoundException E) {
             System.out.println("File not found! " + E.toString());
         } catch (Exception E) {
